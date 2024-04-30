@@ -47,7 +47,7 @@
 
 <lights>
 	<pointlight>
-		<position vector3="0.0 600.0 100.0" />
+		<position vector3="0.0 600.0 200.0" />
 		<color color="1.0 1.0 1.0" />
 		<ka double="0.2" />
 	</pointlight>

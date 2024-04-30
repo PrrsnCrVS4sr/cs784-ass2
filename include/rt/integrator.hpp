@@ -57,6 +57,8 @@ namespace rt
 
 		///Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
 		virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const = 0;
+
+		
 	};
 
 	/**
@@ -75,6 +77,24 @@ namespace rt
 
 		/// Returns the name of the integrator.
 		virtual std::string get_name(void) const {return "whitted";}
+
+		/// Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
+		virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const;
+	};
+
+	class montecarlo_integrator_t : public integrator_t
+	{
+	public:
+		
+		/// Constructor
+		montecarlo_integrator_t() { }
+		/// Constructor
+		montecarlo_integrator_t(int _d):integrator_t(_d) { } 
+		/// Destructor
+		virtual ~montecarlo_integrator_t() { }
+
+		/// Returns the name of the integrator.
+		virtual std::string get_name(void) const {return "montecarlo";}
 
 		/// Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
 		virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const;

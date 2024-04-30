@@ -1,0 +1,182 @@
+<rt-scene>
+
+<camera>
+	<lookat vector3="0.0 0.0 1.0" />
+	<eye	vector3="0.0 0.0 0.0" />
+	<up		vector3="0.0 1.0 0.0" />
+	<fov	angle="60 deg" />
+	<near   double="0.0001" />
+	<far    double="1000.0" />
+</camera>
+
+<image>
+	<width double="600" />
+	<height double="600" />
+	<bgcolor color="0.0 0.0 0.0" />	
+	<num-samples double="1" />	
+</image>
+
+<materials>
+	<simplemat id="red_diffuse">
+		<diffuse color="0.6 0.1 0.1" />
+		<specular color="0.3 0.1 0.1" />	
+		<reflect color="0.0 0.0 0.0" />
+		<transmit color="0.0 0.0 0.0" />
+		<eta double="0.0"/>
+		<n double="0"/>
+		<isreflect bool="false"/>
+		<istransmit bool="false"/>
+	</simplemat>
+
+	<simplemat id="green_diffuse">
+		<diffuse color="0.0 0.5 0.0" />
+		<specular color="0.0 0.0 0.0" />	
+		<reflect color="0.0 0.0 0.0" />
+		<transmit color="0.0 0.0 0.0" />
+		<eta double="0.0"/>
+		<n double="0"/>
+		<isreflect bool="false"/>
+		<istransmit bool="false"/>
+	</simplemat>
+
+	<simplemat id="white_diffuse">
+		<diffuse color="0.5 0.5 0.5" />
+		<specular color="0.0 0.0 0.0" />	
+		<reflect color="0.0 0.0 0.0" />
+		<transmit color="0.0 0.0 0.0" />
+		<eta double="0.0"/>
+		<n double="0"/>
+		<isreflect bool="false"/>
+		<istransmit bool="false"/>
+	</simplemat>
+
+	<simplemat id="blue_diffuse">
+		<diffuse color="0.1 0.1 0.6" />
+		<specular color="0.1 0.1 0.3" />	
+		<reflect color="0.0 0.0 0.0" />
+		<transmit color="0.0 0.0 0.0" />
+		<eta double="0.0"/>
+		<n double="0"/>
+		<isreflect bool="false"/>
+		<istransmit bool="false"/>
+	</simplemat>
+
+	<simplemat id="blue_specular">
+		<diffuse color="0.0 0.0 0.7" />
+		<specular color="0.2 0.2 0.9" />	
+		<reflect color="0.0 0.0 0.0" />
+		<transmit color="0.0 0.0 0.0" />
+		<eta double="0.0"/>
+		<n double="1"/>
+		<isreflect bool="false"/>
+		<istransmit bool="false"/>
+	</simplemat>
+
+	<simplemat id="glass">
+		<diffuse color="0.1 0.1 0.1" />
+		<specular color="0.1 0.1 0.1" />
+		<reflect color="0.1 0.1 0.1" />
+		<transmit color="0.9 0.9 0.9" />
+		<eta double="1.5"/>
+		<n double="10" />
+		<isreflect bool="true"/>
+		<istransmit bool="true"/>
+	</simplemat>	
+
+
+
+	<simplemat id="dummy">
+		<diffuse color="0.0 0.0 0.0" />
+		<specular color="0.0 0.0 0.0" />
+		<reflect color="0.0 0.0 0.0" />
+		<transmit color="0.0 0.0 0.0" />
+		<eta double="0.0"/>
+		<n double="0.0" />
+		<isreflect bool="false"/>
+		<istransmit bool="false"/>
+	</simplemat>
+	<simplemat id="mirror">
+		<diffuse color="0.0 0.0 0.0" />
+		<specular color="0.0 0.0 0.0" />
+		<reflect color="1.0 1.0 1.0" />
+		<transmit color="0.0 0.0 0.0" />
+		<eta double="1.0"/>
+		<n double="100" />
+		<isreflect bool="true"/>
+		<istransmit bool="false"/>
+	</simplemat>
+</materials>
+
+<objects>
+
+
+	<sphere material="mirror">
+		<center vector3="60.0 -110.0 405.0" />
+		<radius double="40.0" />
+	</sphere>
+
+	<!-- <sphere material="glass">
+		<center vector3="0.0 -110.0 650.0" />
+		<radius double="40.0" />
+	</sphere> -->
+
+	<sphere material="glass">
+		<center vector3="-85.0 -100.0 340.0" />
+		<radius double="50.0" />
+	</sphere>
+
+	<plane material="white_diffuse">
+		<Q vector3="-150.0 150.0 500.0" />
+		<u vector3="300.0 0.0 0.0" />
+		<v vector3="0.0 -300.0 0.0" />
+	</plane>
+
+
+
+	<plane material="red_diffuse">
+		<Q vector3="150.0 150.0 500.0" />
+		<u vector3="0.0 -300.0 0.0" />
+		<v vector3="0.0 0.0 -300.0" />
+	</plane>
+
+	<plane material="white_diffuse">
+		<Q vector3="150.0 -150.0 500.0" />
+		<u vector3="-300.0 0.0 0.0" />
+		<v vector3="0.0 0.0 -300.0" />
+	</plane>
+
+	<plane material="blue_diffuse">
+		<Q vector3="-150.0 -150.0 500.0" />
+		<u vector3="0.0 300.0 0.0" />
+		<v vector3="0.0 0.0 -300.0" />
+	</plane>
+
+	<plane material="white_diffuse">
+		<Q vector3="150.0 150.0 500.0" />
+		<u vector3="-300.0 0.0 0.0" />
+		<v vector3="0.0 0.0 -300.0" />
+	</plane>
+
+	<!-- <sphere material="dummy">
+		<center vector3="0.0 20.0 500.0" />
+		<radius double="10.0" />
+	</sphere> -->
+</objects>
+
+<lights>
+	<pointlight>
+		<position vector3="0.0 100.0 450.0" />
+		<color color="0.8 0.8 0.8" />
+		<ka double="0.1" />
+	</pointlight>
+
+</lights>
+
+<integrator>
+	<whitted>
+		<depth-of-recursion int="10" />
+	</whitted>
+</integrator>
+
+
+</rt-scene>

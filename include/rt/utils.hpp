@@ -88,4 +88,22 @@ namespace rt
     
     ///Cast a double between 0.0 and 1.0 to a char. A gamme value of 2.2 is used.
     inline char to_char(double x){ return char(pow(clamp(x),1/2.2)*255+.5); }
+
+	inline double random_double() {
+    // Returns a random real in [0,1).
+    	return rand() / (RAND_MAX + 1.0);
+	}
+
+	inline double random_double(double min, double max) 
+	{
+    	// Returns a random real in [min,max).
+    	return min + (max-min)*random_double();
+	}
+	inline Vector3d random(double min, double max) {
+        return Vector3d(random_double(min,max), random_double(min,max), random_double(min,max));
+    }
+
+	
+
+	
 }

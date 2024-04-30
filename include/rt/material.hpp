@@ -108,7 +108,7 @@ namespace rt
 
 		/// Returns true if surface reflects, else returns false.
 		bool get_is_reflect(void) const;
-		/// Returns false if surface transmits, else returns false.
+		/// Returns true if surface transmits, else returns false.
 		bool get_is_transmit(void) const;
 
 		/// Prints information to streams.

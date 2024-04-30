@@ -22,10 +22,11 @@
 */
 
 #include <image.hpp>
-
+#include <iostream>
+using namespace std;
 using namespace rt;
 
-image_t::image_t(int _w, int _h, color_t _bgc):width(_w),height(_h),bgcolor(_bgc)
+image_t::image_t(int _w, int _h, color_t _bgc,int _nsamples):width(_w),height(_h),bgcolor(_bgc),num_samples(_nsamples)
 {
 	aspect = double(width)/double(height);
 	data = new char[width*height*3]; 
@@ -53,15 +54,17 @@ color_t image_t::get_pixel(unsigned int _x, unsigned int _y) const
 	double r=double(data[pos])/255.0;
 	double g=double(data[pos+1])/255.0;
 	double b=double(data[pos+2])/255.0;
+	
 	return color_t(r,g,b);
 }
 
 void image_t::set_pixel(unsigned int _x, unsigned int _y, color_t _col)
 {
 	int pos=(_y)*width*3+(_x)*3;
-	char r = to_char(_col.r());
-	char g = to_char(_col.g());
-	char b = to_char(_col.b());
+	char r = to_char((double)_col.r()/num_samples);
+	char g = to_char((double)_col.g()/num_samples);
+	char b = to_char((double)_col.b()/num_samples);
+
 	data[pos]=r; data[pos+1]=g; data[pos+2]=b;
 }
 

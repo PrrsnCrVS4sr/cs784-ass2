@@ -92,11 +92,11 @@ color_t camera_t::sample_ray(ray_t &ray, const Vector2f& _pixelpos) const
  	Vector3d d = near_p.normalized();
 	double onebyz = 1.0/d.z();
 
-    ray.origin = cam2world.transform_point(Vector3d(0.0,0.0,0.0));
+    ray.origin = this->eye;
     ray.direction = cam2world * d;
 
-    ray.mint = near * onebyz;
-    ray.maxt = far * onebyz;
+    ray.mint = -INFINITY;
+    ray.maxt = INFINITY;
 
     return color_t(1.0); 
 }

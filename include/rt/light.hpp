@@ -32,6 +32,7 @@ namespace rt
 {
 	/// Forward Declaration.
 	class scene_t;
+	class object_t;
 
 	/**
 	 * \brief  This is the abstract base class for lights.
@@ -58,6 +59,11 @@ namespace rt
 
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const = 0;
+
+
+		virtual object_t* get_object() const = 0;
+
+		virtual double compute_shadows(int num_samples, Vector3d _hitpt, const scene_t* _scn) const = 0;
 	};
 
 	/** 
@@ -85,6 +91,43 @@ namespace rt
 		* of direct illumination and the shadow computations.
 		**/ 
 		virtual color_t direct(const Vector3d& hitpt, const Vector3d& normal, const material_t* mat, const scene_t* scn) const;
+
+		/// Prints information about the light to the stream.
+		virtual void print(std::ostream &stream) const;
+		object_t* get_object() const;
+
+		double compute_shadows(int num_samples, Vector3d _hitpt, const scene_t* _scn) const;
+	};
+
+
+
+
+	class area_light_t : public light_t
+	{
+	private:
+		/// Position of the light
+		object_t* obj;
+		/// Color of the light. This can be thought of as radiance emitted by the light source.
+		Vector3d col;
+	
+
+	public:
+		/// Constructor
+		area_light_t(object_t* object, const Vector3d& _col);
+		/// Destructor
+		virtual ~area_light_t();
+
+		/** 
+		* Returns the direct illumination estimate for the point hitpt, where the surface normal is normal, material is mat.
+		* Scene is passed so that the camera position, and the objects can be used for computing the specular component
+		* of direct illumination and the shadow computations.
+		**/ 
+		virtual color_t direct(const Vector3d& hitpt, const Vector3d& normal, const material_t* mat, const scene_t* scn) const;
+
+
+		double compute_shadows(int num_samples,  Vector3d _hitpt, const scene_t* _scn) const;
+
+		object_t* get_object() const;
 
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const;

@@ -43,6 +43,7 @@ namespace rt
 		///Background color - a ray gets this color if it does not hit anything
 		color_t bgcolor;
 
+
 		/** 
 		 * The pixel data of size width * height * num_channels
 		 * We compute radiance as a unbounded double. Writing to the framebuffer requires clamping to 0.0-1.0 range
@@ -52,8 +53,9 @@ namespace rt
 		char *data;
 
 	public:
+		int num_samples;
 		/// Constructor.
-		image_t(int width, int height, color_t _bgc);
+		image_t(int width, int height, color_t _bgc, int num_samples);
 		/// Destructor.
 		virtual ~image_t();
 

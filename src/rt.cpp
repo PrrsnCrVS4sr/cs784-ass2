@@ -10,20 +10,39 @@ void rt::render(const scene_t* scn)
 	unsigned int w=scn->img->get_width();
 	unsigned int h=scn->img->get_height();
 
+	// std::list<light_t*>::const_iterator lit;
+	// for(lit= scn->lits.begin(); lit!= scn->lits.end(); lit++)
+	// {	
+
+	// 	object_t* obj = (*lit)->get_object();
+	// 	if(obj != NULL)
+	// 		scn->objs.push_back(obj);	
+	// }
+
 	for (unsigned int i=0; i<w; i++)
-	{
+	{	
+		//std::clog << "\rScanlines remaining: " << (w - i) << ' ' << std::flush;
 		for (unsigned int j=0; j<h; j++)
-		{
+		{	
 			ray_t ray;
 			int d=0;
-			Eigen::Vector2f psample=scn->img->sample_pixel(i,j);
-			color_t col = scn->cam->sample_ray(ray, psample);
+			color_t aggr_col(0.0);
 
-			col *= scn->intg->radiance(scn, ray, d);
+			for(int k = 0; k < scn->img->num_samples; k++)
+			{
+				Eigen::Vector2f psample=scn->img->sample_pixel(scn->img->num_samples==1?i:i + rand()%(3)-1,
+				scn->img->num_samples==1?j:j+ rand()%(3)-1);
+				color_t col = scn->cam->sample_ray(ray, psample);
+				col *= scn->intg->radiance(scn, ray, d);
+				aggr_col += col;
+			}
+			
+			
+			// scn->cam->print(std::cout);
+			
 
-			scn->img->set_pixel(i,j,col);
+			scn->img->set_pixel(i,j,aggr_col);
 		}
-
 	}
 }
 

@@ -201,7 +201,7 @@ bool scene_t::parse_scenefile(void)
 		(*oit)->print(std::cerr);
 	}
 
-	numlits = parse_lights(doc_root);
+	numlits = parse_lights(doc_root, mats);
 	std::list<light_t*>::iterator lit;
 	for (lit=lits.begin(); lit!=lits.end(); lit++)
 	{
@@ -244,6 +244,10 @@ int scene_t::parse_objects(XMLElement* _elm, const std::list<material_t*>& matli
 
 		if (name == "sphere")
 			objs.push_back(parse_object_sphere(elm_child, matlist));
+		else if(name == "plane")
+			objs.push_back(parse_object_plane(elm_child, matlist));
+		else if(name == "disc")
+			objs.push_back(parse_object_disc(elm_child, matlist));
 		else
 			throw std::invalid_argument("Invalid object in scene file.");
 
@@ -257,10 +261,60 @@ int scene_t::parse_objects(XMLElement* _elm, const std::list<material_t*>& matli
 		return numobj;
 }
 
+
+
+object_t* scene_t::parse_object(XMLElement* _elm, const std::list<material_t*>& matlist)
+{
+
+
+	XMLElement* elm_child = _elm->FirstChildElement();
+
+	std::string name(elm_child->Name());
+
+	if (name == "sphere")
+	{
+		object_t* ob = parse_object_sphere(elm_child, matlist);
+		objs.push_back(ob);
+		return ob;
+	}
+	else if(name == "plane")
+	{
+		object_t* ob = parse_object_plane(elm_child, matlist);
+		objs.push_back(ob);
+		return ob;
+	}
+	else if(name == "disc")
+	{
+		object_t* ob = parse_object_disc(elm_child, matlist);
+		objs.push_back(ob);
+		return ob;
+	}
+		
+	else
+		throw std::invalid_argument("Invalid object in scene file.");
+
+}
 object_t* scene_t::parse_object_sphere(XMLElement* _elm, const std::list<material_t*>& matlist) 
 {
-	return (object_t*)(new sphere_t(find_material(parse_parameter(_elm, "material"),	matlist),
+	return (object_t*)(new sphere_t(find_material(parse_parameter(_elm, "material"),matlist),
 									parse_vector3(_elm,  "center"),
+									parse_double(_elm, "radius")));
+}
+
+object_t* scene_t::parse_object_plane(XMLElement* _elm, const std::list<material_t*>& matlist) 
+{
+	return (object_t*)(new plane_t(find_material(parse_parameter(_elm, "material"),	matlist),
+									parse_vector3(_elm,  "Q"),
+									parse_vector3(_elm, "u"),
+									parse_vector3(_elm, "v")));
+}
+
+object_t* scene_t::parse_object_disc(XMLElement* _elm, const std::list<material_t*>& matlist) 
+{
+	return (object_t*)(new disc_t(find_material(parse_parameter(_elm, "material"),	matlist),
+									parse_vector3(_elm,  "center"),
+									parse_vector3(_elm, "u"),
+									parse_vector3(_elm, "v"),
 									parse_double(_elm, "radius")));
 }
 
@@ -312,11 +366,11 @@ image_t* scene_t::parse_image(XMLElement* _elm)
 	return new image_t(	
 					parse_double(elm_img, "width"),
 					parse_double(elm_img, "height"),
-					bgc);
+					bgc, parse_double(elm_img, "num-samples"));
 
 }
 
-int scene_t::parse_lights(XMLElement* _elm) 
+int scene_t::parse_lights(XMLElement* _elm, const std::list<material_t*>& matlist) 
 {
 	lits.clear();
 
@@ -332,6 +386,8 @@ int scene_t::parse_lights(XMLElement* _elm)
 
 		if (name == "pointlight")
 			lits.push_back(parse_pointlight(elm_child));
+		else if(name == "arealight")
+			lits.push_back(parse_arealight(elm_child, matlist));
 		else
 			throw std::invalid_argument("Invalid light in scene file.");
 		
@@ -351,6 +407,13 @@ light_t* scene_t::parse_pointlight(XMLElement* _elm)
 			parse_double(_elm, "ka")));
 }
 
+light_t* scene_t::parse_arealight(XMLElement* _elm, const std::list<material_t*>& matlist) 
+{
+	return (light_t*)(new area_light_t(
+			parse_object(_elm, matlist),
+			parse_color(_elm, "color")));
+}
+
 integrator_t* scene_t::parse_integrator(XMLElement* _elm)
 {
 	XMLElement* elm_intg = _elm->FirstChildElement("integrator");
@@ -364,6 +427,10 @@ integrator_t* scene_t::parse_integrator(XMLElement* _elm)
 	{
 		return parse_whitted_integrator(elm_child);
 	}
+	else if (name == "montecarlo")
+	{
+		return parse_montecarlo_integrator(elm_child);
+	}
 	else
 		throw std::invalid_argument("Invalid integrator in scene file.");
 	
@@ -373,5 +440,11 @@ integrator_t* scene_t::parse_integrator(XMLElement* _elm)
 integrator_t* scene_t::parse_whitted_integrator(XMLElement *_elm)
 {
 	return (integrator_t*)(new whitted_integrator_t(
+								parse_int(_elm, "depth-of-recursion")));
+}
+
+integrator_t* scene_t::parse_montecarlo_integrator(XMLElement *_elm)
+{
+	return (integrator_t*)(new montecarlo_integrator_t(
 								parse_int(_elm, "depth-of-recursion")));
 }

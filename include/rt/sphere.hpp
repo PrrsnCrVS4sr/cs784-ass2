@@ -46,6 +46,8 @@ namespace rt
 		/// Sphere material
 		material_t* mat;
 
+		light_t* area_light;
+
 	public:
 		/// Constructor
 		sphere_t(material_t* _mat);
@@ -69,7 +71,15 @@ namespace rt
 		/// Returns the material for the sphere.
 		material_t* get_material(void) const;
 
+		light_t* get_area_light(void) const;
+
+		void set_area_light(light_t* light);
+
 		/// Prints information about the sphere. to stream.
 		virtual void print(std::ostream &stream) const;
+
+		virtual color_t get_color(void) const;
+
+		Vector3d get_samples_on_surface(void) const;
 	};
 }

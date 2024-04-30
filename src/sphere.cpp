@@ -2,8 +2,8 @@
 
 using namespace rt;
 
-sphere_t::sphere_t(material_t* _mat):center(0.0,0.0,0.0),radius(1.0),mat(_mat) { }
-sphere_t::sphere_t(material_t* _mat, Eigen::Vector3d _c, double _r): center(_c), radius(_r), mat(_mat) { }
+sphere_t::sphere_t(material_t* _mat):center(0.0,0.0,0.0),radius(1.0),mat(_mat) { area_light = NULL;}
+sphere_t::sphere_t(material_t* _mat, Eigen::Vector3d _c, double _r): center(_c), radius(_r), mat(_mat) {area_light = NULL; }
 
 sphere_t::~sphere_t() { }
 
@@ -58,4 +58,32 @@ void sphere_t::print(std::ostream &stream) const
 	stream<<"Type: Sphere"<<std::endl;
 	stream<<"Center: "<<center.format(CommaInitFmt)<<std::endl;
 	stream<<"Radius: "<<radius<<std::endl<<std::endl;
+}
+
+color_t sphere_t::get_color(void) const
+{
+	return color_t(0.0,0.0,0.0);
+}
+
+
+light_t* sphere_t::get_area_light(void) const
+{
+	return area_light;
+}
+
+
+Vector3d sphere_t::get_samples_on_surface(void) const
+{
+	double theta = 2 * M_PI * random_double();
+	double phi = acos(1 - 2 * random_double());
+	double x = sin(phi) * cos(theta);
+	double y = sin(phi) * sin(theta);
+	double z = cos(phi);
+
+	return Vector3d(x,y,z);
+}
+
+void sphere_t::set_area_light(light_t* light)
+{
+	area_light = light;
 }

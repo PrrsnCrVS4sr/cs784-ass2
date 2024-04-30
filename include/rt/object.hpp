@@ -31,6 +31,7 @@ namespace rt
 {
 	/// Forward declaration
 	class object_t;
+	class light_t;
 
 	/// Convenience typedef to reprent a hit (intersection) point
 	typedef std::pair<const object_t*, double> hit_t; 
@@ -41,6 +42,7 @@ namespace rt
 	class object_t
 	{
 	public:
+		
 		/// Constructor
 		object_t();
 
@@ -62,7 +64,17 @@ namespace rt
 		/// Returns the material for the object.
 		virtual material_t* get_material(void) const = 0; 
 
+		/// Returns the light if any for the object.
+		virtual light_t* get_area_light(void) const = 0;
+
+		/// Set the light if any for the object.
+		virtual void set_area_light(light_t*) = 0;
+
 		/// Prints information about the object to stream.
 		virtual void print(std::ostream &stream) const = 0;
+
+		virtual color_t get_color(void) const = 0;
+
+		virtual Vector3d get_samples_on_surface(void) const =0;
 	};
 }

@@ -1,25 +1,3 @@
-/*
-    This file is part of rt.
-
-    rt is a simple ray tracer meant to be used for teaching ray tracing.
-
-    Copyright (c) 2018 by Parag Chaudhuri
-
-    Some parts of rt are derived from Nori by Wenzel Jacob.
-    https://github.com/wjakob/nori/
-
-    rt is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License Version 3
-    as published by the Free Software Foundation.
-
-    rt is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
 
 #pragma once
 
@@ -31,7 +9,9 @@
 #include <light.hpp>
 #include <material.hpp>
 #include <object.hpp>
+#include <plane.hpp>
 #include <sphere.hpp>
+#include <disc.hpp>
 #include <utils.hpp>
 
 using namespace tinyxml2;
@@ -41,6 +21,7 @@ namespace rt
  /// Forward Declarations   
  class light_t;
  class integrator_t;
+ class object_t;
 
  /**
   * \brief This is the scence class. It represents the entire scene that rt reads from the scene file.
@@ -115,8 +96,18 @@ namespace rt
 
     /// Parse objects. All objects in the scene must appear in one block. They are all added to a vector of objects.
     int parse_objects(XMLElement* _elm, const std::list<material_t*>& matlist);
+
+    // Parse object
+    object_t* parse_object(XMLElement* _elm, const std::list<material_t*>& matlist);
+
     /// Parse a sphere object.
     object_t* parse_object_sphere(XMLElement* _elm, const std::list<material_t*>& matlist);
+    
+    /// Parse a plane object
+    object_t* parse_object_plane(XMLElement* _elm, const std::list<material_t*>& matlist);
+
+	/// Parse an disc obkect
+	object_t* parse_object_disc(XMLElement* _elm, const std::list<material_t*>& matlist);
 
     /// Parses materials. All materials in the scene must appear in one block. They are all added to a list of materials.
     int parse_materials(XMLElement* _elm);
@@ -124,10 +115,11 @@ namespace rt
     material_t* parse_simplemat(XMLElement* _elm);
 
     /// Parses lights. All the lights in the scene must appeat in one block. They are all added to a list of lights.
-    int parse_lights(XMLElement* _elm);
+    int parse_lights(XMLElement* _elm, const std::list<material_t*>& matlist);
     /// Parse a point light.
     light_t* parse_pointlight(XMLElement* _elm);
 
+    light_t* parse_arealight(XMLElement* _elm, const std::list<material_t*>& matlist);
     /// Parse the image.
     image_t* parse_image(XMLElement* _elm);
 
@@ -135,6 +127,8 @@ namespace rt
     integrator_t* parse_integrator(XMLElement* _elm);
     /// Parse a whitted integrator.
     integrator_t* parse_whitted_integrator(XMLElement *_elm);
+	/// Parce a montecarlo integrator
+	integrator_t* parse_montecarlo_integrator(XMLElement *_elm);
 
     ///Constructor. Does not do anything. This cannot be used, hence defined as private.
     scene_t() {;}
